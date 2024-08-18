@@ -3,14 +3,29 @@ from flask import request
 from flask import render_template
 from werkzeug.utils import secure_filename
 import csv
+import sqlite3
 
 from recipe import Recipe
 
 app = Flask(__name__)
 
 
+def init_db():
+    connection = sqlite3.connect("recipes.db")
+    cursor = connection.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS recipes(
+        id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+        title TEXT,
+        image TEXT,
+        steps TEXT,
+        ingredients TEXT
+        )
+    ''')
+
+
 @app.route("/")
 def home():
+    init_db()
     return render_template('home.html')
 
 
